@@ -17,41 +17,60 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ */
 
 import java.io.*;
 import java.util.*;
 
-public class Problem1001
-{
+public class Problem1001 {
 
-   final boolean oj = System.getProperty("ONLINE_JUDGE") != null;
+	final boolean oj = System.getProperty("ONLINE_JUDGE") != null;
 
-   public static void main(String[] args) throws IOException
-   {
-      new Problem1001().run();
-   }
+	public static void main(String[] args) throws IOException {
+		new Problem1001().run();
+	}
 
-   StreamTokenizer in;
-   PrintWriter out;
+	final StreamTokenizer in;
+	final PrintWriter out;
 
-   int nextInt() throws IOException
-   {
-      in.nextToken();
-      return (int)in.nval;
-   }
+	int nextInt() throws IOException {
+		in.nextToken();
+		return (int) in.nval;
+	}
 
-   void run() throws IOException
-   {
-      in = new StreamTokenizer(new BufferedReader(new InputStreamReader(System.in, "ISO-8859-1")));
-      out = new PrintWriter(new OutputStreamWriter(System.out, "ISO-8859-1"));
-      solve();
-      out.flush();
-   }
+	void run() throws IOException {
+		solve();
+		out.flush();
+	}
 
-   void solve() throws IOException
-   {
-      // Write solution here
-   }
+	public Problem1001() throws IOException {
+		in = new StreamTokenizer(new BufferedReader(new InputStreamReader(
+				System.in, "ISO-8859-1")));
+		out = new PrintWriter(new OutputStreamWriter(System.out, "ISO-8859-1"));
+	}
+	
+	double combine(int hi, short lo) {
+		final long h = ((long)hi) & 0xFFFFFFFFL;
+		final int l = ((int)lo) & 0xFFFF;
+		return (h<<16) | l;
+	}
+
+	void solve() throws IOException {
+		short[] dataLo = new short[131072];
+		int[] dataHi = new int[131072];
+		long value;
+		double sqvalue;
+		int count = 0;
+
+		while (in.nextToken() != StreamTokenizer.TT_EOF) {
+			value = (long) in.nval;
+			sqvalue = Math.sqrt(value);
+			value = Math.round(sqvalue * 10000);
+			dataHi[count] = (int) (value >> 16);
+			dataLo[count] = (short) value;
+			count++;
+		}
+ 		for (;count--> 0;)
+			out.format("%.4f\n", combine(dataHi[count], dataLo[count])/10000d);
+	}
 }
-
