@@ -22,7 +22,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 import java.io.*;
 import java.util.*;
 
-public class Problem1020 {
+public class Problem1021 {
 
 	/*
 	 * angle between normalized vectors:
@@ -36,7 +36,8 @@ public class Problem1020 {
 	 * rope length = 2*Pi*radius + sum(distance ai ai+1)
 	 */
 	
-	static final int MAX_NAILS = 100; 
+	static final int MAX_LIST_ELEMENTS = 50000;
+	static final int DESIRED_SUM = 10000;
 
 	public static void main(String[] args) throws IOException {
 		final StreamTokenizer in = new StreamTokenizer(new BufferedReader(new InputStreamReader(
@@ -45,31 +46,34 @@ public class Problem1020 {
 
 		in.nextToken();
 		int n = (int)in.nval;
+		short[] list = new short[n];
+		int i;
 		
-		in.nextToken();
-		double length = 2*Math.PI*in.nval;
-		
-		double x0, y0, x1, y1, x2, y2;
-		
-		in.nextToken();
-		x0 = x2 = in.nval;
-		in.nextToken();
-		y0 = y2 = in.nval;
-		for (;--n>0;) {
-			x1 = x2;
+		// read the first list
+		for (i=0;i<n;i++) {
 			in.nextToken();
-			x2 = in.nval;
-			
-			y1 = y2;
-			in.nextToken();
-			y2 = in.nval;
-			
-			length += Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2));
+			list[i] = (short)in.nval;
 		}
-		length += Math.sqrt(Math.pow(x0-x2, 2) + Math.pow(y0-y2, 2));
 		
- 		out.format("%.2f\n", length);
+		in.nextToken();
+		n = (int)in.nval;
 		
+		// read second list searching for desired sum
+		int j=0, k;
+		for (i=0; i<n; i++) {
+			in.nextToken();
+			k = (short)in.nval;
+			
+			while (list[j]+k < DESIRED_SUM && j<list.length-1) j++;
+			while (list[j]+k > DESIRED_SUM && j>0) j--;
+			if (list[j]+k == DESIRED_SUM) {
+				out.print("YES");
+				out.flush();
+				return;
+			}
+		}
+		
+		out.print("NO");
 		out.flush();
 	}
 }
